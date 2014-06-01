@@ -17,10 +17,11 @@ RUN apt-get -q update
 RUN apt-get -yq install sabnzbdplus
 RUN apt-get -yq install sabnzbdplus-theme-mobile
 
-RUN mkdir /scripts
+## Copy Sickbeard post download scripts
+RUN mkdir /scripts/sickbeard
 RUN wget https://raw.githubusercontent.com/midgetspy/Sick-Beard/development/autoProcessTV/autoProcessTV.py
 RUN wget https://raw.githubusercontent.com/midgetspy/Sick-Beard/development/autoProcessTV/sabToSickBeard.py
-RUN mv ./*.py /scripts/
+RUN mv ./*.py /scripts/sickbeard
 
 # Default sabznbd port
 EXPOSE 8080
