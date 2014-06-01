@@ -2,6 +2,7 @@ FROM dockerfile/ubuntu
 
 # Enable multiverse for unrar
 RUN sed -i '1ideb mirror://mirrors.ubuntu.com/mirrors.txt trusty main multiverse' /etc/apt/sources.list
+RUN apt-get -yq update
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get -yq upgrade
@@ -15,6 +16,11 @@ RUN apt-get -q update
 
 RUN apt-get -yq install sabnzbdplus
 RUN apt-get -yq install sabnzbdplus-theme-mobile
+
+RUN mkdir /scripts
+RUN wget https://raw.githubusercontent.com/midgetspy/Sick-Beard/development/autoProcessTV/autoProcessTV.py
+RUN wget https://raw.githubusercontent.com/midgetspy/Sick-Beard/development/autoProcessTV/sabToSickBeard.py
+RUN mv ./*.py /scripts/
 
 # Default sabznbd port
 EXPOSE 8080
