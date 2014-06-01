@@ -1,0 +1,49 @@
+FROM dockerfile/ubuntu
+
+# Enable multiverse for unrar
+RUN sed -i '1ideb mirror://mirrors.ubuntu.com/mirrors.txt trusty main multiverse' /etc/apt/sources.list
+RUN apt-get -yq update
+
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get -yq upgrade
+
+# Dependencies
+RUN apt-get -yq install unrar par2 unzip python-yenc
+
+# Add jcfp sabnzbd repo (unofficial, but recomended) for easier install via apt
+RUN add-apt-repository ppa:jcfp/ppa
+RUN apt-get -q update
+
+RUN apt-get -yq install sabnzbdplus
+RUN apt-get -yq install sabnzbdplus-theme-mobile
+
+## Copy Sickbeard post download scripts
+RUN mkdir -p /scripts/sickbeard
+RUN wget https://raw.githubusercontent.com/midgetspy/Sick-Beard/development/autoProcessTV/autoProcessTV.py
+RUN wget https://raw.githubusercontent.com/midgetspy/Sick-Beard/development/autoProcessTV/sabToSickBeard.py
+RUN mv ./*.py /scripts/sickbeard
+
+# Default sabznbd port
+EXPOSE 8080
+
+# Download working folder
+VOLUME ["/downloads"]
+
+# Config file and database
+VOLUME ["/config"]
+
+# Add jcfp sabnzbd repo (unofficial, but recomended) for easier install via apt
+RUN add-apt-repository ppa:jon-severinsson/ffmpeg
+RUN apt-get -q update
+
+RUN apt-get -yq install ffmpeg python
+
+RUN git clone https://github.com/mdhiggins/sickbeard_mp4_automator.git /scripts/sickbeard_mp4_automator
+RUN cd /scripts/sickbeard_mp4_automator/setup/ && python ez_setup.py
+RUN cd /scripts/sickbeard_mp4_automator/setup/subliminal/ && python setup.py install
+ADD ./autoProcess.ini /scripts/sickbeard_mp4_automator/autoProcess.ini
+
+
+ENTRYPOINT ["sabnzbdplus", "--browser", "0","--config-file", "/config" ]
+
+CMD ["--server", ":8080"]

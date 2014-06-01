@@ -9,6 +9,7 @@ docker run -d -p 8081:8081 \
 docker run -d -p 8080:8080 \
   -v /ssd_zfs/docker-data/sabnzbd:/config \
   -v /ssd_zfs/downloads:/downloads \
+  --link pfleet_sickbeard:sickbeard \
   --name pfleet_sabnzbd pfleet/sabnzbd
 
 docker run --net=host -t -i -d -P \
