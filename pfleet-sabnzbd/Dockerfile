@@ -18,7 +18,7 @@ RUN apt-get -yq install sabnzbdplus
 RUN apt-get -yq install sabnzbdplus-theme-mobile
 
 ## Copy Sickbeard post download scripts
-RUN mkdir /scripts/sickbeard
+RUN mkdir -p /scripts/sickbeard
 RUN wget https://raw.githubusercontent.com/midgetspy/Sick-Beard/development/autoProcessTV/autoProcessTV.py
 RUN wget https://raw.githubusercontent.com/midgetspy/Sick-Beard/development/autoProcessTV/sabToSickBeard.py
 RUN mv ./*.py /scripts/sickbeard
